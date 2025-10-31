@@ -7,13 +7,13 @@
     "mindsdb": {
       "url": "http://127.0.0.1:47337/sse"
     },
-    "newsapi": {
-      "url": "https://newsapi.org/v2",
+    "tmdb": {
       "type": "rest",
+      "url": "https://api.themoviedb.org/3",
       "auth": {
-        "type": "header",
-        "key": "X-Api-Key",
-        "value": "6960b6efaed24396aff9bb8d539dfda3"
+        "type": "query",
+        "key": "api_key",
+        "value": "0242c38cefd63a85fe3abaf45e44f631"
       }
     }
   }
