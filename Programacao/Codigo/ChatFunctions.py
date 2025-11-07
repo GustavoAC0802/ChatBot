@@ -17,10 +17,18 @@ async def buscar_filmes_por_nome(nome):
             resultados = data.get("results", [])
             if not resultados:
                 print("\nNenhum filme encontrado.")
+                return []
             else:
                 print(f"\nResultados para '{nome}':")
-                for filme in resultados[:100]:
+                filmes_lista = []
+                for filme in resultados[:10]:
                     print(f"- {filme['title']} ({filme.get('release_date', 'sem data')})")
+                    filmes_lista.append({
+                        'title': filme['title'],
+                        'release_date': filme.get('release_date', 'sem data'),
+                        'id': filme['id']
+                    })
+                return filmes_lista
 
 async def buscar_por_autor(nome):
     """Busca filmes por nome de pessoa (ator, diretor, roteirista etc.)"""
@@ -33,7 +41,7 @@ async def buscar_por_autor(nome):
 
             if not pessoas:
                 print("\nNenhum autor/ator/diretor encontrado.")
-                return
+                return {"pessoa": None, "filmes": []}
 
             pessoa = pessoas[0]
             pessoa_id = pessoa["id"]
@@ -49,7 +57,7 @@ async def buscar_por_autor(nome):
 
                 if not filmes:
                     print("Nenhum filme associado encontrado.")
-                    return
+                    return {"pessoa": pessoa_nome, "filmes": []}
 
                 # Remove duplicatas e ordena por popularidade
                 vistos = set()
@@ -63,11 +71,20 @@ async def buscar_por_autor(nome):
                 filmes_exibicao = filmes_ordenados[:10]
 
                 print("\nFilmes conhecidos:")
+                filmes_lista = []
                 for filme in filmes_exibicao:
                     titulo = filme.get("title") or filme.get("name", "Sem título")
                     data_lanc = filme.get("release_date", "sem data")
                     cargo = filme.get("job") or "Ator/Atriz"
                     print(f"- {titulo} ({data_lanc}) — {cargo}")
+                    filmes_lista.append({
+                        'title': titulo,
+                        'release_date': data_lanc,
+                        'id': filme['id'],
+                        'job': cargo
+                    })
+                
+                return {"pessoa": pessoa_nome, "filmes": filmes_lista}
 
 async def buscar_filmes_populares():
     """Lista filmes populares"""
@@ -76,9 +93,16 @@ async def buscar_filmes_populares():
         async with session.get(url) as resp:
             data = await resp.json()
             filmes = data.get("results", [])
-            print("\n Filmes populares:")
+            print(f"\nFilmes populares:")
+            filmes_lista = []
             for filme in filmes[:10]:
                 print(f"- {filme['title']} ({filme.get('release_date', 'sem data')})")
+                filmes_lista.append({
+                    'title': filme['title'],
+                    'release_date': filme.get('release_date', 'sem data'),
+                    'id': filme['id']
+                })
+            return filmes_lista
 
 # Exemplo rápido de uso:
 async def main():

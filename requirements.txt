@@ -1,0 +1,4 @@
+aiohttp
+python-dotenv
+python-telegram-bot
+mysql-connector-python
